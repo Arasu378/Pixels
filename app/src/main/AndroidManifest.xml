@@ -28,8 +28,12 @@
             android:name=".activity.Login_Activity"
             android:label="Login"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.Video_Activity" />
-        <activity android:name=".activity.PlayVideoActivity"></activity>
+        <activity android:name=".activity.Video_Activity"
+            android:label="Videos"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.PlayVideoActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Play Video"/>
     </application>
 
 </manifest>

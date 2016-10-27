@@ -2,6 +2,7 @@ package com.kyrostechnologies.thirunavukkarasu.pixels.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.SearchView;
 
 import com.android.volley.Request;
@@ -45,6 +47,10 @@ public class Video_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         serverErrorDialog=new ServerErrorDialog(this);
         checkOnline=new CheckOnline(this);
         checkOnline.checkOnline();
@@ -146,6 +152,18 @@ public class Video_Activity extends AppCompatActivity {
         };
         ServiceHandler.getInstance().addToRequestQueue(jsonObjectRequest);
 
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Video_Activity.this.finish();
+                Intent i= new Intent(Video_Activity.this, MainActivity.class);
+                startActivity(i);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }
