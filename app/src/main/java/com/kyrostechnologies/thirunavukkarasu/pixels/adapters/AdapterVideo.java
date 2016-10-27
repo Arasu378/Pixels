@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
 import com.kyrostechnologies.thirunavukkarasu.pixels.activity.PlayVideoActivity;
@@ -32,11 +33,13 @@ public class AdapterVideo extends RecyclerView.Adapter<AdapterVideo.MyViewHolder
     public class MyViewHolder extends RecyclerView.ViewHolder{
         public ImageView video_cllick;
         public LinearLayout click_next_page;
+        public TextView tag_text_thumb;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             video_cllick=(ImageView)itemView.findViewById(R.id.video_cllick);
             click_next_page=(LinearLayout)itemView.findViewById(R.id.click_next_page);
+            tag_text_thumb=(TextView)itemView.findViewById(R.id.tag_text_thumb);
         }
     }
     @Override
@@ -53,6 +56,9 @@ public class AdapterVideo extends RecyclerView.Adapter<AdapterVideo.MyViewHolder
          final String url=vid.getUrl();
          final String tags=vid.getTags();
         String userImageURL= vid.getUserImageURL();
+        if(tags!=null){
+            holder.tag_text_thumb.setText(tags);
+        }
         try{
             if(picture_id!=null){
                 String thumb_url="https://i.vimeocdn.com/video/"+picture_id+"_"+"640x360.jpg";

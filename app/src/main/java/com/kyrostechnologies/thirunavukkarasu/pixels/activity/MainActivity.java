@@ -80,6 +80,7 @@ private SessionManager sessionManager;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         recyler_picture=(RecyclerView)findViewById(R.id.recyler_picture);
+        GetPictures("fruits");
         adapter=new AdapterPicture(MainActivity.this,picturesList);
         RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(getApplicationContext());
         recyler_picture.setLayoutManager(layoutManager);
@@ -182,8 +183,9 @@ private SessionManager sessionManager;
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                String i=query.replace(" ","+");
                 picturesList.clear();
-                    GetPictures(query);
+                    GetPictures(i);
 
                 return false;
             }

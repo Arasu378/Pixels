@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.Pictures;
@@ -22,9 +23,11 @@ public class AdapterPicture extends RecyclerView.Adapter<AdapterPicture.MyViewHo
     private List<Pictures>picturesList;
     public class MyViewHolder extends RecyclerView.ViewHolder{
         public ImageView photo_list;
+        public TextView tag_text;
         public MyViewHolder(View itemView) {
             super(itemView);
             photo_list=(ImageView)itemView.findViewById(R.id.photo_list);
+            tag_text=(TextView)itemView.findViewById(R.id.tag_text);
         }
     }
     public AdapterPicture (Context mContext,List<Pictures>pictures){
@@ -43,6 +46,9 @@ public class AdapterPicture extends RecyclerView.Adapter<AdapterPicture.MyViewHo
             Pictures pic=picturesList.get(position);
         String id=pic.getId();
         String tag=pic.getTags();
+        if(tag!=null){
+            holder.tag_text.setText(tag);
+        }
         String picture=pic.getWebformatURL();
         try{
             if(picture!=null){

@@ -57,6 +57,7 @@ public class Video_Activity extends AppCompatActivity {
         progressBarHandler=new ProgressBarHandler(this);
         setContentView(R.layout.activity_video_);
         recyler_video=(RecyclerView)findViewById(R.id.recyler_video);
+        GetVideo("funny");
         adapter=new AdapterVideo(Video_Activity.this,videoList);
         RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(getApplicationContext());
         recyler_video.setLayoutManager(layoutManager);
@@ -73,8 +74,9 @@ public class Video_Activity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                String i=query.replace(" ","+");
                 videoList.clear();
-                GetVideo(query);
+                GetVideo(i);
 
                 return false;
             }
