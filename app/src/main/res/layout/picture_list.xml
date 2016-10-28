@@ -11,6 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/linear_picture"
         android:orientation="vertical">
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -23,9 +24,10 @@
                 android:layout_height="wrap_content"
                 android:text="text"
                 android:id="@+id/tag_text"
+                android:gravity="center"
                 android:textSize="18sp"
                 android:layout_gravity="center"
-                android:textColor="@color/white"
+                android:textColor="@color/background_theme"
                 />
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView

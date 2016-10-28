@@ -28,13 +28,15 @@
             android:name=".activity.Login_Activity"
             android:label="Login"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.Video_Activity"
+        <activity
+            android:name=".activity.Video_Activity"
             android:label="Videos"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.PlayVideoActivity"
-            android:theme="@style/AppTheme"
-
-            android:label="Play Video"/>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.PlayVideoActivity"
+            android:label="Play Video"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.Picture_Fullscreen"></activity>
     </application>
 
 </manifest>

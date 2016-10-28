@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_picture__fullscreen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_theme"
+    tools:context="com.kyrostechnologies.thirunavukkarasu.pixels.activity.Picture_Fullscreen">
+
+
+
+
+    <it.sephiroth.android.library.imagezoom.ImageViewTouch
+        android:id="@+id/imgDisplay"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+   />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="text"
+        android:id="@+id/tag_full_screen"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:gravity="center"/>
+</LinearLayout>
