@@ -36,7 +36,8 @@
             android:name=".activity.PlayVideoActivity"
             android:label="Play Video"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activity.Picture_Fullscreen"></activity>
+        <activity android:name=".activity.Picture_Fullscreen" />
+        <activity android:name=".activity.AboutUs"></activity>
     </application>
 
 </manifest>

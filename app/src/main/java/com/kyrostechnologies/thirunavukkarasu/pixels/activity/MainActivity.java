@@ -224,6 +224,9 @@ private SessionManager sessionManager;
             Intent i=new Intent(MainActivity.this,Login_Activity.class);
             startActivity(i);
             MainActivity.this.finish();
+        }else if(id==R.id.about_us){
+            Intent l=new Intent(MainActivity.this,AboutUs.class);
+            startActivity(l);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

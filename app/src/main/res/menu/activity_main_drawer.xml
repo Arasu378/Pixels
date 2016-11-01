@@ -23,6 +23,10 @@
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/logout_icon"
                 android:title="LogOut" />
+            <item
+                android:id="@+id/about_us"
+                android:icon="@drawable/about_us"
+                android:title="About Us" />
 
         </menu>
     </item>
