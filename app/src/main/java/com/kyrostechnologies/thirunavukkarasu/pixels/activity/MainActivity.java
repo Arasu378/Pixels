@@ -277,6 +277,9 @@ private SessionManager sessionManager;
         }else if(id==R.id.about_us){
             Intent l=new Intent(MainActivity.this,AboutUs.class);
             startActivity(l);
+        }else if(id==R.id.nav_meme){
+            Intent l=new Intent(MainActivity.this,MeMe.class);
+            startActivity(l);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
