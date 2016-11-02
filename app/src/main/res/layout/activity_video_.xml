@@ -6,11 +6,16 @@
     android:layout_height="match_parent"
     android:background="@color/background_theme"
     tools:context="com.kyrostechnologies.thirunavukkarasu.pixels.activity.Video_Activity">
+   <android.support.v4.widget.SwipeRefreshLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/swipe_video">
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recyler_video">
 
     </android.support.v7.widget.RecyclerView>
+   </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

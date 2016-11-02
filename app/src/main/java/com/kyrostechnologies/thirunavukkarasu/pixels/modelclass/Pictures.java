@@ -8,6 +8,43 @@ public class Pictures {
     private String tags;
     private String webformatURL;
     private String id;
+    private String favorites;
+    private String user;
+    private String comments;
+    private String likes;
+
+    public String getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(String favorites) {
+        this.favorites = favorites;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public String getLikes() {
+        return likes;
+    }
+
+    public void setLikes(String likes) {
+        this.likes = likes;
+    }
+
     public Pictures(){
 
     }

@@ -76,7 +76,7 @@ public class PlayVideoActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 PlayVideoActivity.this.finish();
-                Intent i= new Intent(PlayVideoActivity.this, MainActivity.class);
+                Intent i= new Intent(PlayVideoActivity.this, Video_Activity.class);
                 startActivity(i);
                 return true;
         }

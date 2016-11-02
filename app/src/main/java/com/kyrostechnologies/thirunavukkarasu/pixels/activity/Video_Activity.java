@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
 import com.kyrostechnologies.thirunavukkarasu.pixels.adapters.AdapterVideo;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.KeyPixabay;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ScrollListenerVIdeo;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.Video;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.CheckOnline;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ProgressBarHandler;
@@ -42,6 +44,9 @@ public class Video_Activity extends AppCompatActivity {
     private ServerErrorDialog serverErrorDialog;
     private CheckOnline checkOnline;
     private ProgressBarHandler progressBarHandler;
+    private int Searchedcurrentpage=1;
+    private String searchedquery=null;
+    private SwipeRefreshLayout swipe_video;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +62,32 @@ public class Video_Activity extends AppCompatActivity {
         progressBarHandler=new ProgressBarHandler(this);
         setContentView(R.layout.activity_video_);
         recyler_video=(RecyclerView)findViewById(R.id.recyler_video);
-        GetVideo("funny");
+        GetVideo(null,Searchedcurrentpage);
+        swipe_video=(SwipeRefreshLayout)findViewById(R.id.swipe_video);
         adapter=new AdapterVideo(Video_Activity.this,videoList);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(getApplicationContext());
+        final LinearLayoutManager layoutManager=new LinearLayoutManager(getApplicationContext());
         recyler_video.setLayoutManager(layoutManager);
         recyler_video.setItemAnimator(new DefaultItemAnimator());
         recyler_video.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        recyler_video.addOnScrollListener(new ScrollListenerVIdeo(layoutManager){
+            @Override
+            public void onLoadMore(int current_page) {
+                if(searchedquery==null){
+                    GetVideo("funny",current_page);
+                }else{
+                    GetVideo(searchedquery,current_page);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+        swipe_video.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+
+            @Override
+            public void onRefresh() {
+                GetVideo(null,Searchedcurrentpage);
+            }
+        });
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,7 +100,8 @@ public class Video_Activity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 String i=query.replace(" ","+");
                 videoList.clear();
-                GetVideo(i);
+                searchedquery=i;
+                GetVideo(i,Searchedcurrentpage);
 
                 return false;
             }
@@ -92,10 +117,15 @@ public class Video_Activity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);    }
 
-    private void GetVideo(String query) {
+    private void GetVideo(String query,int Searchedcurrentpage) {
         final String key = KeyPixabay.getKey();
+        String i = "https://pixabay.com/api/videos/?key=" + key+"&q="+query+"&pretty=true&page="+Searchedcurrentpage;
+        String url = "https://pixabay.com/api/videos/?key=" + key+"&pretty=true&page="+Searchedcurrentpage;
 
-        String i = "https://pixabay.com/api/videos/?key=" + key+"&q="+query+"&pretty=true";
+        if(query==null){
+            i=url;
+        }
+
         progressBarHandler.show();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, i, (String) null, new Response.Listener<JSONObject>() {
             @Override
@@ -120,9 +150,6 @@ public class Video_Activity extends AppCompatActivity {
                         v.setUrl(url);
                         v.setUserImageURL(userImageURL);
                         videoList.add(v);
-
-
-
                     }
                     adapter.notifyDataSetChanged();
                 }catch (Exception e){

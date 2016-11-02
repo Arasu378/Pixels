@@ -27,12 +27,15 @@ public class AdapterPicture extends RecyclerView.Adapter<AdapterPicture.MyViewHo
     private List<Pictures>picturesList;
     public class MyViewHolder extends RecyclerView.ViewHolder{
         public ImageView photo_list;
-        public TextView tag_text;
+        public TextView picture_title,like_count,rating_count,comment_count;
         public LinearLayout linear_picture;
         public MyViewHolder(View itemView) {
             super(itemView);
             photo_list=(ImageView)itemView.findViewById(R.id.photo_list);
-            tag_text=(TextView)itemView.findViewById(R.id.tag_text);
+            picture_title=(TextView)itemView.findViewById(R.id.picture_title);
+            like_count=(TextView)itemView.findViewById(R.id.like_count);
+            rating_count=(TextView)itemView.findViewById(R.id.rating_count);
+            comment_count=(TextView)itemView.findViewById(R.id.comment_count);
             linear_picture=(LinearLayout)itemView.findViewById(R.id.linear_picture);
         }
     }
@@ -52,9 +55,20 @@ public class AdapterPicture extends RecyclerView.Adapter<AdapterPicture.MyViewHo
             final Pictures pic=picturesList.get(position);
         final String id=pic.getId();
         final String tag=pic.getTags();
-        if(tag!=null){
-            holder.tag_text.setText(tag);
+        final String  likes=pic.getLikes();
+        final String  comments=pic.getComments();
+        final String  favorites=pic.getFavorites();
+        final String users=pic.getUser();
+        if(users!=null){
+           holder.picture_title.setText(users);
+        }if(favorites!=null){
+            holder.rating_count.setText(favorites);
+        }if(comments!=null){
+            holder.comment_count.setText(comments);
+        }if(likes!=null){
+            holder.like_count.setText(likes);
         }
+
         final String picture=pic.getWebformatURL();
         try{
             if(picture!=null){

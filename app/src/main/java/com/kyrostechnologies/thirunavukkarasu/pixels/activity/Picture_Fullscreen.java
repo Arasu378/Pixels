@@ -14,6 +14,8 @@ import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ProgressBarH
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ServerErrorDialog;
 import com.squareup.picasso.Picasso;
 
+import java.util.StringTokenizer;
+
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class Picture_Fullscreen extends AppCompatActivity {
@@ -44,8 +46,11 @@ public class Picture_Fullscreen extends AppCompatActivity {
         if(tag!=null){
             tag_full_screen.setText(tag);
         }if(picture!=null){
+            StringTokenizer k=new StringTokenizer(picture,"_");
+            String first=k.nextToken();
+            String url=first+"_960.jpg";
             try{
-                Picasso.with(getApplicationContext()).load(picture).resize(600,400).centerCrop().into(imgDisplay);
+                Picasso.with(getApplicationContext()).load(url).resize(960,720).centerCrop().into(imgDisplay);
 
             }catch (Exception e){
 

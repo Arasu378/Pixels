@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -30,6 +31,7 @@ import com.kyrostechnologies.thirunavukkarasu.pixels.R;
 import com.kyrostechnologies.thirunavukkarasu.pixels.adapters.AdapterPicture;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.KeyPixabay;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.Pictures;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ScrollListenerPicture;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.CheckOnline;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ProgressBarHandler;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ServerErrorDialog;
@@ -56,6 +58,10 @@ private SessionManager sessionManager;
     private ServerErrorDialog serverErrorDialog;
     private CheckOnline checkOnline;
     private ProgressBarHandler progressBarHandler;
+    private String searchedquery=null;
+    private int Searchedcurrentpage=1;
+    private boolean loading =true;
+    private SwipeRefreshLayout swipe_refresh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,9 +86,10 @@ private SessionManager sessionManager;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         recyler_picture=(RecyclerView)findViewById(R.id.recyler_picture);
-        GetPictures("fruits");
+        GetPictures(null,Searchedcurrentpage);
+        swipe_refresh=(SwipeRefreshLayout)findViewById(R.id.swipe_refresh) ;
         adapter=new AdapterPicture(MainActivity.this,picturesList);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(getApplicationContext());
+        final LinearLayoutManager layoutManager=new LinearLayoutManager(getApplicationContext());
         recyler_picture.setLayoutManager(layoutManager);
         recyler_picture.setItemAnimator(new DefaultItemAnimator());
         recyler_picture.setAdapter(adapter);
@@ -107,13 +114,41 @@ private SessionManager sessionManager;
         }
 
 
+       recyler_picture.addOnScrollListener(new ScrollListenerPicture(layoutManager){
+            @Override
+            public void onLoadMore(int current_page) {
+                if(searchedquery==null){
+                    GetPictures(null,current_page);
+                }else{
+                    GetPictures(searchedquery,current_page);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+        swipe_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+
+            @Override
+            public void onRefresh() {
+                GetPictures(null,Searchedcurrentpage);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+      //  ScrollListenerPicture.reset(0, true);
 
     }
 
-    private void GetPictures(String query) {
+    private void GetPictures(String query, int currentpage) {
         final String key = KeyPixabay.getKey();
 
-        String i = "https://pixabay.com/api/?key=" + key+"&q="+query+"&image_type=photo&pretty=true";
+        String i = "https://pixabay.com/api/?key=" + key+"&q="+query+"&image_type=photo&pretty=true&page="+currentpage;
+        String url="https://pixabay.com/api/?key=" + key+"&image_type=photo&pretty=true&page="+currentpage;
+        if(query==null){
+            i=url;
+        }
         progressBarHandler.show();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, i, (String) null, new Response.Listener<JSONObject>() {
             @Override
@@ -126,10 +161,18 @@ private SessionManager sessionManager;
                         String tag=first.getString("tags");
                         String webformatURL=first.getString("webformatURL");
                         String id=first.getString("id");
+                        String likes=first.getString("likes");
+                        String comments=first.getString("comments");
+                        String user=first.getString("user");
+                        String favorites=first.getString("favorites");
                         Pictures pic=new Pictures();
                         pic.setId(id);
                         pic.setTags(tag);
                         pic.setWebformatURL(webformatURL);
+                        pic.setLikes(likes);
+                        pic.setComments(comments);
+                        pic.setUser(user);
+                        pic.setFavorites(favorites);
                         picturesList.add(pic);
                     }
                     adapter.notifyDataSetChanged();
@@ -185,7 +228,8 @@ private SessionManager sessionManager;
             public boolean onQueryTextSubmit(String query) {
                 String i=query.replace(" ","+");
                 picturesList.clear();
-                    GetPictures(i);
+                searchedquery=i;
+                    GetPictures(i,Searchedcurrentpage);
 
                 return false;
             }
@@ -222,8 +266,8 @@ private SessionManager sessionManager;
             sessionManager.logoutUser();
             storage.clear();
             Intent i=new Intent(MainActivity.this,Login_Activity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
-            MainActivity.this.finish();
         }else if(id==R.id.about_us){
             Intent l=new Intent(MainActivity.this,AboutUs.class);
             startActivity(l);
