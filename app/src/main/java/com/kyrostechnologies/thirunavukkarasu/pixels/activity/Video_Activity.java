@@ -86,6 +86,7 @@ public class Video_Activity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 GetVideo(null,Searchedcurrentpage);
+                swipe_video.setRefreshing(false);
             }
         });
     }
@@ -157,7 +158,11 @@ public class Video_Activity extends AppCompatActivity {
                 }
 
                 progressBarHandler.hide();
+                try{
+                    swipe_video.setRefreshing(false);
+                }catch (Exception e){
 
+                }
             }
         }, new Response.ErrorListener() {
             @Override

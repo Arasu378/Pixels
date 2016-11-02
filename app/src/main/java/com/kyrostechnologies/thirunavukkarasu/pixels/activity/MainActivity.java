@@ -130,6 +130,7 @@ private SessionManager sessionManager;
             @Override
             public void onRefresh() {
                 GetPictures(null,Searchedcurrentpage);
+
             }
         });
     }
@@ -181,6 +182,11 @@ private SessionManager sessionManager;
                 }
 
                 progressBarHandler.hide();
+                try{
+                    swipe_refresh.setRefreshing(false);
+                }catch (Exception e){
+
+                }
 
             }
         }, new Response.ErrorListener() {
