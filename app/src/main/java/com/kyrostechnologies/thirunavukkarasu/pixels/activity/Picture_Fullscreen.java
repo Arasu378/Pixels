@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.FullScreenClass;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.CheckOnline;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ProgressBarHandler;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ServerErrorDialog;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.StringTokenizer;
@@ -49,8 +51,22 @@ public class Picture_Fullscreen extends AppCompatActivity {
             StringTokenizer k=new StringTokenizer(picture,"_");
             String first=k.nextToken();
             String url=first+"_960.jpg";
+            progressBarHandler.show();
             try{
-                Picasso.with(getApplicationContext()).load(url).resize(960,720).centerCrop().into(imgDisplay);
+                Picasso.with(getApplicationContext()).load(url).resize(960,720).centerCrop().into(imgDisplay, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progressBarHandler.hide();
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        progressBarHandler.hide();
+                        Toast.makeText(getApplicationContext(),"Cannot Load Picture",Toast.LENGTH_SHORT).show();
+
+                    }
+                });
 
             }catch (Exception e){
 
