@@ -5,49 +5,49 @@ package com.kyrostechnologies.thirunavukkarasu.pixels.modelclass;
  */
 
 public class MeMeClass {
-    private String  id;
-    private String name;
-    private String url;
-    private String width;
-    private String height;
+    private String generatorID;
+    private String displayName;
+    private String totalVotesScore;
+    private String instanceID;
+    private String instanceImageUrl;
 
-    public String getId() {
-        return id;
+    public String getGeneratorID() {
+        return generatorID;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setGeneratorID(String generatorID) {
+        this.generatorID = generatorID;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    public String getUrl() {
-        return url;
+    public String getTotalVotesScore() {
+        return totalVotesScore;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setTotalVotesScore(String totalVotesScore) {
+        this.totalVotesScore = totalVotesScore;
     }
 
-    public String getWidth() {
-        return width;
+    public String getInstanceID() {
+        return instanceID;
     }
 
-    public void setWidth(String width) {
-        this.width = width;
+    public void setInstanceID(String instanceID) {
+        this.instanceID = instanceID;
     }
 
-    public String getHeight() {
-        return height;
+    public String getInstanceImageUrl() {
+        return instanceImageUrl;
     }
 
-    public void setHeight(String height) {
-        this.height = height;
+    public void setInstanceImageUrl(String instanceImageUrl) {
+        this.instanceImageUrl = instanceImageUrl;
     }
 }

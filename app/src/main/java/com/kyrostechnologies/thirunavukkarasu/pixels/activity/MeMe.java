@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
 import com.kyrostechnologies.thirunavukkarasu.pixels.adapters.MeMeAdapter;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MeMeClass;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ScrollListenerVIdeo;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.CheckOnline;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ProgressBarHandler;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ServerErrorDialog;
@@ -29,7 +30,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MeMe extends AppCompatActivity {
     private ServerErrorDialog serverErrorDialog;
@@ -39,6 +42,7 @@ public class MeMe extends AppCompatActivity {
     private SwipeRefreshLayout swipe_meme;
     private MeMeAdapter adapter;
     private List<MeMeClass>memelist=new ArrayList<MeMeClass>();
+    private int nextpage=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +58,7 @@ public class MeMe extends AppCompatActivity {
         setContentView(R.layout.activity_me_me);
         meme_recyclerview=(RecyclerView)findViewById(R.id.meme_recyclerview);
         swipe_meme=(SwipeRefreshLayout)findViewById(R.id.swipe_meme);
-        GetMeMe();
+        GetMeMe(nextpage);
          adapter=new MeMeAdapter(MeMe.this,memelist);
         final LinearLayoutManager layoutManager=new LinearLayoutManager(getApplicationContext());
         meme_recyclerview.setLayoutManager(layoutManager);
@@ -65,39 +69,49 @@ public class MeMe extends AppCompatActivity {
 
             @Override
             public void onRefresh() {
-                GetMeMe();
-
+                GetMeMe(nextpage);
+            }
+        });
+        meme_recyclerview.addOnScrollListener(new ScrollListenerVIdeo(layoutManager){
+            @Override
+            public void onLoadMore(int current_page) {
+                GetMeMe(current_page);
+                adapter.notifyDataSetChanged();
             }
         });
     }
 
-    private void GetMeMe() {
-            String url="https://api.imgflip.com/get_memes";
+    private void GetMeMe(int current_page) {
+         //   String url="https://api.imgflip.com/get_memes";
+     // String url="https://api.imgur.com/3/gallery/hot/viral/0.json";
+        String url="http://version1.api.memegenerator.net/Instances_Select_ByPopular?languageCode=en&pageIndex="+current_page+"&pageSize=15";
+      //  String url="https://api.imgur.com/3/g/memes/viral";
         progressBarHandler.show();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("meme_imgflip",response.toString());
-                try{
+             try{
                     boolean success=response.getBoolean("success");
                     if(success){
-                        JSONObject data=response.getJSONObject("data");
-                        JSONArray memes=data.getJSONArray("memes");
-                        for(int i=0; i<=memes.length();i++){
-                            JSONObject first=memes.getJSONObject(i);
-                            String id=first.getString("id");
-                            String name=first.getString("name");
-                            String url=first.getString("url");
-                            String width=first.getString("width");
-                            String height=first.getString("height");
+                        JSONArray result=response.getJSONArray("result");
+                        for(int k=0; k<result.length();k++){
+                            JSONObject first=result.getJSONObject(k);
+                            String generatorID=first.getString("generatorID");
+                            String displayName=first.getString("displayName");
+                            String totalVotesScore=first.getString("totalVotesScore");
+                            String instanceID=first.getString("instanceID");
+                            String instanceImageUrl=first.getString("instanceImageUrl");
                             MeMeClass me=new MeMeClass();
-                            me.setId(id);
-                            me.setName(name);
-                            me.setUrl(url);
-                            me.setWidth(width);
-                            me.setHeight(height);
+                            me.setDisplayName(displayName);
+                            me.setGeneratorID(generatorID);
+                            me.setInstanceID(instanceID);
+                            me.setTotalVotesScore(totalVotesScore);
+                            me.setInstanceImageUrl(instanceImageUrl);
                             memelist.add(me);
                         }
+
+
                         adapter.notifyDataSetChanged();
 
                     }else{
@@ -112,6 +126,8 @@ public class MeMe extends AppCompatActivity {
                         alertDialog.show();
 
                     }
+                    progressBarHandler.hide();
+                    swipe_meme.setRefreshing(false);
 
 
                 }catch (Exception e){
@@ -130,6 +146,14 @@ public class MeMe extends AppCompatActivity {
 
             }
         }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                //params.put("Content-Type", "application/json");
+                params.put("Authorization: Client-ID", "cbd37ce1320375c");
+                return params;
+            }
 
 
         };

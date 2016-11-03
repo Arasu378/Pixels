@@ -45,16 +45,16 @@ public class MeMeAdapter extends RecyclerView.Adapter<MeMeAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(MeMeAdapter.MyViewHolder holder, int position) {
         MeMeClass m=meClassList.get(position);
-         String  id=m.getId();
-         String name=m.getName();
-         String url=m.getUrl();
-         String width=m.getWidth();
-         String height=m.getHeight();
-        if(name!=null){
-            holder.meme_title.setText(name);
-        }if(url!=null){
+         String generatorID=m.getGeneratorID();
+         String displayName=m.getDisplayName();
+         String totalVotesScore=m.getTotalVotesScore();
+         String instanceID=m.getInstanceID();
+         String instanceImageUrl=m.getInstanceImageUrl();
+        if(displayName!=null){
+            holder.meme_title.setText(displayName);
+        }if(instanceImageUrl!=null){
             try{
-                Picasso.with(mContext).load(url).centerCrop().into(holder.photo_list_meme);
+                Picasso.with(mContext).load(instanceImageUrl).into(holder.photo_list_meme);
             }catch (Exception e){
                 e.printStackTrace();
             }
