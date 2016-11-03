@@ -1,6 +1,8 @@
 package com.kyrostechnologies.thirunavukkarasu.pixels.activity;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -11,7 +13,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -43,6 +47,8 @@ public class MeMe extends AppCompatActivity {
     private MeMeAdapter adapter;
     private List<MeMeClass>memelist=new ArrayList<MeMeClass>();
     private int nextpage=1;
+    private String searchedquery=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +64,7 @@ public class MeMe extends AppCompatActivity {
         setContentView(R.layout.activity_me_me);
         meme_recyclerview=(RecyclerView)findViewById(R.id.meme_recyclerview);
         swipe_meme=(SwipeRefreshLayout)findViewById(R.id.swipe_meme);
-        GetMeMe(nextpage);
+        GetMeMe(null,nextpage);
          adapter=new MeMeAdapter(MeMe.this,memelist);
         final LinearLayoutManager layoutManager=new LinearLayoutManager(getApplicationContext());
         meme_recyclerview.setLayoutManager(layoutManager);
@@ -69,24 +75,53 @@ public class MeMe extends AppCompatActivity {
 
             @Override
             public void onRefresh() {
-                GetMeMe(nextpage);
+                GetMeMe(null,nextpage);
             }
         });
         meme_recyclerview.addOnScrollListener(new ScrollListenerVIdeo(layoutManager){
             @Override
             public void onLoadMore(int current_page) {
-                GetMeMe(current_page);
+                GetMeMe(null,current_page);
                 adapter.notifyDataSetChanged();
             }
         });
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_search, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String i=query.replace(" ","+");
+                memelist.clear();
+                searchedquery=i;
+                GetMeMe(i,nextpage);
 
-    private void GetMeMe(int current_page) {
-         //   String url="https://api.imgflip.com/get_memes";
-     // String url="https://api.imgur.com/3/gallery/hot/viral/0.json";
+                return false;
+            }
+
+
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);    }
+
+    private void GetMeMe(String query,int current_page) {
+
         String url="http://version1.api.memegenerator.net/Instances_Select_ByPopular?languageCode=en&pageIndex="+current_page+"&pageSize=15";
-      //  String url="https://api.imgur.com/3/g/memes/viral";
         progressBarHandler.show();
+        String i="http://version1.api.memegenerator.net/Instances_Select_ByNew?languageCode=en&pageIndex="+current_page+"&pageSize=15&urlName="+query;
+        if(query!=null){
+                url=i;
+        }
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
