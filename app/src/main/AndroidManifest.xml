@@ -3,6 +3,7 @@
     package="com.kyrostechnologies.thirunavukkarasu.pixels">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".servicehandler.ServiceHandler"
@@ -11,6 +12,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".broadcastreceiver.BroadCastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".activity.Splash_Screen_Activity"
             android:label="@string/app_name"
@@ -38,7 +45,9 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".activity.Picture_Fullscreen" />
         <activity android:name=".activity.AboutUs" />
-        <activity android:name=".activity.MeMe"></activity>
+        <activity android:name=".activity.MeMe" />
+        <activity android:name=".activity.BackgroundActivity" />
+        <activity android:name=".activity.MangaActivity"></activity>
     </application>
 
 </manifest>

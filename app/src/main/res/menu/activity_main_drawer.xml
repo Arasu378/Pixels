@@ -10,10 +10,14 @@
             android:id="@+id/nav_videos"
             android:icon="@drawable/video_nav"
             android:title="Videos" />
- <item
+        <item
             android:id="@+id/nav_meme"
             android:icon="@drawable/meme"
             android:title="MeMes" />
+        <item
+            android:id="@+id/nav_manga"
+            android:icon="@drawable/manga"
+            android:title="Manga" />
 
     </group>
 

@@ -280,10 +280,14 @@ private SessionManager sessionManager;
         }else if(id==R.id.nav_meme){
             Intent l=new Intent(MainActivity.this,MeMe.class);
             startActivity(l);
+        }else if(id==R.id.nav_manga){
+            Intent l=new Intent(MainActivity.this,MangaActivity.class);
+            startActivity(l);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
