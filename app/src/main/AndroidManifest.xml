@@ -12,11 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".broadcastreceiver.BroadCastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+
 
         <activity
             android:name=".activity.Splash_Screen_Activity"
@@ -45,9 +41,15 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".activity.Picture_Fullscreen" />
         <activity android:name=".activity.AboutUs" />
-        <activity android:name=".activity.MeMe" />
-        <activity android:name=".activity.BackgroundActivity" />
-        <activity android:name=".activity.MangaActivity"></activity>
+        <activity android:name=".activity.MeMe"
+            android:label="MeMes"
+            />
+        <activity android:name=".activity.MangaActivity"
+            android:label="Manga List"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".activity.MangaDescriptionActivity"
+            android:label="Manga Description"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

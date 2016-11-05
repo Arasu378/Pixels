@@ -1,6 +1,7 @@
 package com.kyrostechnologies.thirunavukkarasu.pixels.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +12,9 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
+import com.kyrostechnologies.thirunavukkarasu.pixels.activity.MangaDescriptionActivity;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaClass;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaIdClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +57,18 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
     public void onBindViewHolder(MangaAdapter.ViewHolder holder, int position) {
         MangaClass mangaClass=mangaClassList.get(position);
          String MangaTitle=mangaClass.getMangaTitle();
-         String Id=mangaClass.getId();
+         final String Id=mangaClass.getId();
         if(MangaTitle!=null){
             holder.manga_title.setText(MangaTitle);
         }
+        holder.cardview_manga.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(mContext, MangaDescriptionActivity.class);
+                MangaIdClass.getHolder().setId(Id);
+                mContext.startActivity(i);
+            }
+        });
     }
 
     @Override
