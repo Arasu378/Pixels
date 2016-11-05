@@ -3,6 +3,7 @@ package com.kyrostechnologies.thirunavukkarasu.pixels.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,14 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +53,8 @@ public class DescriptionFragment extends Fragment {
     private String Description=null;
     private String PictureURL=null;
    private List<String>genereslist=new ArrayList<String>();
+    private static final String TAG=DescriptionFragment.class.getSimpleName();
+    private static final String  FILENAME="Manga.json";
     public DescriptionFragment(){
 
     }
@@ -97,7 +108,9 @@ public class DescriptionFragment extends Fragment {
                         if(Title!=null){
                             manga_title_description.setText(Title);
                         }if(Description!=null){
-                            brief_description.setText(Description);
+                            String des= Html.fromHtml(Description).toString();
+
+                            brief_description.setText(des);
                         }if(PictureURL!=null){
                             String picurl= MangaPictureURL.PICTUREURL+"/"+PictureURL;
                             progressBarHandler.show();
@@ -132,7 +145,7 @@ public class DescriptionFragment extends Fragment {
                             }
                             StringBuilder builder=new StringBuilder();
                             for (String generesitem:genereslist){
-                                builder.append(generesitem+"\n");
+                                builder.append(generesitem+" ");
                             }
                             catogories_list_description.setText(builder.toString());
 
@@ -174,4 +187,8 @@ public class DescriptionFragment extends Fragment {
             ServiceHandler.getInstance().addToRequestQueue(jsonObjectRequest);
 
     }
+
+
+
+
 }
