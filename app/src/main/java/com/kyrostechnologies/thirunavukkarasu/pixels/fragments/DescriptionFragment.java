@@ -16,26 +16,21 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ChaptersArrayClass;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaIdClass;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaPictureURL;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ProgressBarHandler;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ServerErrorDialog;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ServiceHandler;
+import com.kyrostechnologies.thirunavukkarasu.pixels.storage.Storage;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +48,11 @@ public class DescriptionFragment extends Fragment {
     private String Description=null;
     private String PictureURL=null;
    private List<String>genereslist=new ArrayList<String>();
+    private List<String>ChaptersList=new ArrayList<String>();
+    private List<ChaptersArrayClass>ChaptersArrayList=new ArrayList<ChaptersArrayClass>();
     private static final String TAG=DescriptionFragment.class.getSimpleName();
     private static final String  FILENAME="Manga.json";
+    private Storage storage;
     public DescriptionFragment(){
 
     }
@@ -72,6 +70,7 @@ public class DescriptionFragment extends Fragment {
         brief_description=(TextView)descriptionlayout.findViewById(R.id.brief_description);
         manga_picture_description=(ImageView)descriptionlayout.findViewById(R.id.manga_picture_description);
         MangaId= MangaIdClass.getHolder().getId();
+        storage=Storage.getInstance(getContext());
         if(MangaId!=null){
             GetMangaDescriptios();
         }
@@ -115,7 +114,7 @@ public class DescriptionFragment extends Fragment {
                             String picurl= MangaPictureURL.PICTUREURL+"/"+PictureURL;
                             progressBarHandler.show();
                             try{
-                                Picasso.with(getContext()).load(picurl).resize(150,150).centerCrop().into(manga_picture_description, new Callback() {
+                                Picasso.with(getContext()).load(picurl).resize( 150,200).centerCrop().into(manga_picture_description, new Callback() {
                                     @Override
                                     public void onSuccess() {
                                         progressBarHandler.hide();
@@ -153,16 +152,44 @@ public class DescriptionFragment extends Fragment {
                             e.printStackTrace();
                         }
                         try{
-                            JSONArray categories=response.getJSONArray("categories");
-                            for(int k=0;k<categories.length();k++){
-                                JSONArray items=categories.getJSONArray(k);
-                                for(int l=0;l<items.length();l++){
-                                    String values=items.getString(l);
-                                    Log.d("chapters",values);
+                            JSONArray chapters=response.getJSONArray("chapters");
+                            for(int l=0;l<chapters.length();l++){
+                                ChaptersArrayClass s=new ChaptersArrayClass();
+
+                                JSONArray first=chapters.getJSONArray(l);
+                                for(int m=0;m<first.length();m++){
+                                    String chaptercontent=first.getString(m);
+                                  //  String ChapterNumber=first.getString(0);
+//
+                                   // String ChapterDate=first.getString(1);
+                                   // String ChapterTitle=first.getString(2);
+                                   // String ChapterId=first.getString(3);
+
+                                    if(m==0){
+                                        s.setChapterNumber(chaptercontent);
+                                    } else if (m == 1) {
+                                        s.setChapterDate(chaptercontent);
+                                    }else if(m==2){
+                                        s.setChapterTitle(chaptercontent);
+                                    }else if(m==3){
+                                        s.setChapterId(chaptercontent);
+                                    }
+                                   // ChaptersList.add(chaptercontent);
+                                   // Log.d("Chapter_content",chaptercontent);
+
                                 }
+                                ChaptersArrayList.add(s);
+
                             }
                         }catch (Exception e){
                             e.printStackTrace();
+                        }
+                        try{
+                            Gson gson=new Gson();
+                            String ChapterString=gson.toJson(ChaptersArrayList);
+                            storage.putChapterList(ChapterString);
+                        }catch (Exception e){
+                            Log.d("exception_conve_gson",e.getMessage());
                         }
 
                     }catch (Exception e){

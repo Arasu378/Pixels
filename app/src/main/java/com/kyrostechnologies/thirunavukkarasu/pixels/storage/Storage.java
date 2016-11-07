@@ -54,6 +54,14 @@ public class Storage {
         editor=sp.edit();
         editor.putString("UserPicture",value);
         editor.commit();
+    }public String getChapterList(){
+        return sp.getString("ChapterList",null);
+    }
+    public void putChapterList(String value){
+        SharedPreferences.Editor editor;
+        editor=sp.edit();
+        editor.putString("ChapterList",value);
+        editor.commit();
     }
     public void clear(){
         SharedPreferences.Editor editor;

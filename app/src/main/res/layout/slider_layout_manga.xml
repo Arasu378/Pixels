@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background_theme"
+    android:layout_height="match_parent">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_theme"
+        />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="5dp"
+        app:cardBackgroundColor="@color/cardview_background"
+        app:cardElevation="5dp"
+
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+        <TextView
+            android:id="@+id/lbl_count"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="labelcount"
+            android:textColor="@android:color/white"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>

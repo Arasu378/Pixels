@@ -1,9 +1,11 @@
 package com.kyrostechnologies.thirunavukkarasu.pixels.activity;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -50,6 +52,7 @@ public class MangaActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipe_manga;
     private List<MangaClass>mangaClassList=new ArrayList<MangaClass>();
     private MangaAdapter adapter;
+    private String  MangaResponse=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +72,8 @@ public class MangaActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Creating the file",Toast.LENGTH_LONG).show();
             GetManga();
         }else{
-            ReadFile("Manga.json");
+            AsyncReader i=new AsyncReader();
+            i.execute();
             Toast.makeText(getApplicationContext(),"Reading the file",Toast.LENGTH_LONG).show();
 
         }
@@ -100,7 +104,13 @@ public class MangaActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Manga_response",response.toString());
-                writeToFile(response.toString(),"Manga.json");
+                MangaResponse=response.toString();
+                if(MangaResponse!=null){
+                    AsyncWriter writer=new AsyncWriter();
+                    writer.execute();
+                }else{
+                    Toast.makeText(MangaActivity.this,"Could not write to External sd card..",Toast.LENGTH_LONG).show();
+                }
 
                 try{
                     JSONArray manga=response.getJSONArray("manga");
@@ -205,12 +215,62 @@ public class MangaActivity extends AppCompatActivity {
             myOutWriter.close();
             fOut.close();
 
-            Toast.makeText(getApplicationContext(),fileName + "saved",Toast.LENGTH_LONG).show();
+//            Toast.makeText(MangaActivity.this,fileName + "saved",Toast.LENGTH_LONG).show();
 
 
         } catch (FileNotFoundException e) {e.printStackTrace();}
         catch (IOException e) {e.printStackTrace();}
 
+    }
+    public class AsyncReader extends AsyncTask<String,String,String >{
+        private ProgressDialog progressDialog;
+             @Override
+        protected String doInBackground(String... params) {
+                 ReadFile("Manga.json");
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MangaActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Reading File Please wait..");
+            progressDialog.show();
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressDialog.dismiss();
+        }
+    }
+    public class AsyncWriter extends AsyncTask<String,String,String >{
+        private ProgressDialog pd;
+        @Override
+        protected String doInBackground(String... params) {
+            writeToFile(MangaResponse,"Manga.json");
+
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MangaActivity.this);
+            pd.setCancelable(false);
+            pd.setMessage("Writing File Please wait..");
+            pd.show();
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pd.dismiss();
+
+        }
     }
     private void ReadFile(String filename){
         StringBuffer stringBuffer = new StringBuffer();

@@ -94,7 +94,7 @@ public class MangaDescriptionActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 MangaDescriptionActivity.this.finish();
-                Intent i= new Intent(MangaDescriptionActivity.this, MainActivity.class);
+                Intent i= new Intent(MangaDescriptionActivity.this, MangaActivity.class);
                 startActivity(i);
                 return true;
         }
