@@ -13,17 +13,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ChapterHolder;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaChapterID;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaPictureURL;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.CheckOnline;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ProgressBarHandler;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ServerErrorDialog;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ServiceHandler;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -58,6 +62,14 @@ public class MangaReadingActivity extends AppCompatActivity {
         progressBarHandler=new ProgressBarHandler(this);
         setContentView(R.layout.slider_layout_manga);
         ChapterId= MangaChapterID.getHolder().getMangaChapterId();
+
+        String title= ChapterHolder.getHolder().getMangaTitle();
+        if(title!=null){
+            actionBar.setTitle(title);
+        }else {
+            Toast.makeText(getApplicationContext(),"title is null",Toast.LENGTH_SHORT).show();
+
+        }
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         lbl_count=(TextView)findViewById(R.id.lbl_count);
 
@@ -65,16 +77,13 @@ public class MangaReadingActivity extends AppCompatActivity {
         if(ChapterId!=null){
             GetMangaPictures();
         }
-        myViewPageAdapter = new MyViewPageAdapter();
-        viewPager.setAdapter(myViewPageAdapter);
-        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
-        setCurrentItem(selectedPosition);
+
 
     }
     ViewPager.OnPageChangeListener viewPagerPageChangeListener=new ViewPager.SimpleOnPageChangeListener(){
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            //  displayMetaInfo(position);
+          //  displayMetaInfo(position);
         }
 
         @Override
@@ -84,7 +93,7 @@ public class MangaReadingActivity extends AppCompatActivity {
 
         @Override
         public void onPageScrollStateChanged(int state) {
-            //   super.onPageScrollStateChanged(state);
+               super.onPageScrollStateChanged(state);
         }
     };
     public void setCurrentItem(int currentItem) {
@@ -106,10 +115,12 @@ public class MangaReadingActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("Chapter_Book",response.toString());
+                ReadList.clear();
                 try{
                     JSONArray images=response.getJSONArray("images");
                     for (int i=0;i<images.length();i++){
-                        String value=images.getString(1);
+                        String value=images.getString(i);
+                        Log.d("return_value",value);
                             ReadList.add(value);
                     }
 
@@ -118,7 +129,11 @@ public class MangaReadingActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 progressBarHandler.hide();
-
+                myViewPageAdapter = new MyViewPageAdapter();
+                viewPager.setAdapter(myViewPageAdapter);
+                viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+                setCurrentItem(selectedPosition);
+                myViewPageAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -163,8 +178,33 @@ public class MangaReadingActivity extends AppCompatActivity {
             View view= layoutInflater.inflate(R.layout.activity_manga_reading,container,false);
             ImageViewTouch imgDisplay=(ImageViewTouch)view.findViewById(R.id.imgDisplay);
             String picture=ReadList.get(position);
+            progressBarHandler.show();
+            String value = null;
             try{
-                Picasso.with(getApplicationContext()).load(picture).into(imgDisplay);
+                JSONArray first=new JSONArray(picture);
+
+                     value=first.getString(1);
+
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            String pictureurl= MangaPictureURL.PICTUREURL+value;
+            Log.d("picture_url",pictureurl);
+            try{
+                Picasso.with(getApplicationContext()).load(pictureurl).into(imgDisplay, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progressBarHandler.hide();
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        progressBarHandler.hide();
+
+                    }
+                });
             }catch (Exception e){
                 e.printStackTrace();
             }

@@ -9,12 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
 import com.kyrostechnologies.thirunavukkarasu.pixels.activity.MangaDescriptionActivity;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaClass;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaIdClass;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaPictureURL;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +41,13 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public CardView cardview_manga;
         public TextView manga_title;
+        public ImageView manga_picture_list_item;
 
         public ViewHolder(View itemView) {
             super(itemView);
             cardview_manga=(CardView)itemView.findViewById(R.id.cardview_manga);
             manga_title=(TextView)itemView.findViewById(R.id.manga_title);
+            manga_picture_list_item=(ImageView)itemView.findViewById(R.id.manga_picture_list_item);
 
         }
 
@@ -58,6 +63,8 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
         MangaClass mangaClass=mangaClassList.get(position);
          String MangaTitle=mangaClass.getMangaTitle();
          final String Id=mangaClass.getId();
+        String im=mangaClass.getMangaPicture();
+        String urlpicture= MangaPictureURL.PICTUREURL+im;
         if(MangaTitle!=null){
             holder.manga_title.setText(MangaTitle);
         }
@@ -69,6 +76,13 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
                 mContext.startActivity(i);
             }
         });
+        try{
+            Picasso.with(mContext).load(urlpicture).resize(50,50).centerCrop().into(holder.manga_picture_list_item);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

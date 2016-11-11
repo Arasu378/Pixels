@@ -5,16 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
 import com.kyrostechnologies.thirunavukkarasu.pixels.activity.MangaReadingActivity;
@@ -22,6 +25,7 @@ import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ChaptersArrayCla
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ChaptersClass;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaChapterID;
 import com.kyrostechnologies.thirunavukkarasu.pixels.storage.Storage;
+import com.squareup.otto.Bus;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,14 +37,17 @@ import java.util.List;
  * Created by Thirunavukkarasu on 04-11-2016.
  */
 
-public class ChapterFragment extends Fragment {
+public class ChapterFragment extends Fragment implements DescriptionFragment.DataPassListener{
     private RecyclerView chapter_recyclerview;
     private List<ChaptersClass>chaptersClassList=new ArrayList<ChaptersClass>();
     private Storage storage;
     private String ChaptersListString=null;
     private List<ChaptersArrayClass >ChaptersList=new ArrayList<ChaptersArrayClass>();
     private ChapterListAdapter adapter;
-    public ChapterFragment(){
+    private ProgressDialog pDialog;
+    public static Bus bus;
+
+    public  ChapterFragment(){
 
     }
 
@@ -51,31 +58,82 @@ public class ChapterFragment extends Fragment {
         View view= inflater.inflate(R.layout.chapter_fragment,container,false);
         chapter_recyclerview=(RecyclerView)view.findViewById(R.id.chapter_recyclerview);
         storage=Storage.getInstance(getContext());
-        ChaptersListString=storage.getChapterList();
-        AsyncChapterListReader k=new AsyncChapterListReader();
-        k.execute();
+       // ChaptersListString=storage.getChapterList();
+showProgressDialog();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+               holder();
+            }
+        }, 5000);
 
 
 
         return view;
     }
+
+public void holder(){
+dismissProgressDialog();
+   // ChapterHolder ch=new ChapterHolder();
+//    Log.d("identify","value nulll");
+    ChaptersListString=storage.getChapterList();
+
+//        Log.d("ChapterListString",ChaptersListString);
+    if(ChaptersListString!=null){
+        Toast.makeText(getContext(),"list loaded ",Toast.LENGTH_LONG).show();
+        Log.d("identify",ChaptersListString);
+
+        AsyncChapterListReader k=new AsyncChapterListReader();
+        k.execute();
+    }else{
+        Toast.makeText(getContext(),"not loaded ",Toast.LENGTH_LONG).show();
+    }
+}
+    private void showProgressDialog() {
+        if (pDialog == null) {
+            pDialog = new ProgressDialog(getContext());
+            pDialog.setMessage("Loading. Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+        }
+        pDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (pDialog != null && pDialog.isShowing()) {
+            pDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        dismissProgressDialog();
+
+    }
+
+
+    @Override
+    public void passData(String data) {
+        Toast.makeText(getContext(),"Data:  "+data,Toast.LENGTH_LONG).show();
+
+        this.ChaptersListString=data;
+
+    }
+
+
     public class AsyncChapterListReader extends AsyncTask<String ,String,String>{
-        private ProgressDialog progressDialog;
 
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(getContext());
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Reading File Please wait..");
-            progressDialog.show();
-        }
+            showProgressDialog();
+}
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            progressDialog.dismiss();
             try{
 
                 adapter=new ChapterListAdapter(getContext(),ChaptersList);
@@ -88,6 +146,7 @@ public class ChapterFragment extends Fragment {
             }catch (Exception e){
                 e.printStackTrace();
             }
+            dismissProgressDialog();
 
         }
 

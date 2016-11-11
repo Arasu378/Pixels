@@ -9,6 +9,12 @@ public class ChaptersArrayClass {
     private String ChapterDate;
     private String ChapterTitle;
     private String ChapterId;
+    public void clearData(){
+         this. ChapterNumber=null;
+         this. ChapterDate=null;
+         this. ChapterTitle=null;
+         this. ChapterId=null;
+    }
 
     public String getChapterNumber() {
         return ChapterNumber;

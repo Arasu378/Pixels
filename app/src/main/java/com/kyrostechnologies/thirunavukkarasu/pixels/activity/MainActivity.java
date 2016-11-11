@@ -326,6 +326,9 @@ public class MainActivity extends AppCompatActivity
         }else if(id==R.id.nav_manga){
             Intent l=new Intent(MainActivity.this,MangaActivity.class);
             startActivity(l);
+        }else if(id==R.id.nav_anime){
+            Intent kki=new Intent(MainActivity.this,MyAnimeListActivity.class);
+            startActivity(kki);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

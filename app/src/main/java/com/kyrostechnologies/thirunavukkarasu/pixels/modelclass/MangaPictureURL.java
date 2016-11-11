@@ -6,4 +6,5 @@ package com.kyrostechnologies.thirunavukkarasu.pixels.modelclass;
 
 public class MangaPictureURL {
     public static final String PICTUREURL="http://cdn.mangaeden.com/mangasimg/";
+    public static final String VIDEOURL="http://anime.kotaxdev.com/";
 }

@@ -7,6 +7,15 @@ package com.kyrostechnologies.thirunavukkarasu.pixels.modelclass;
 public class MangaClass {
     private String MangaTitle;
     private String Id;
+    private String MangaPicture;
+
+    public String getMangaPicture() {
+        return MangaPicture;
+    }
+
+    public void setMangaPicture(String mangaPicture) {
+        MangaPicture = mangaPicture;
+    }
 
     public String getMangaTitle() {
         return MangaTitle;

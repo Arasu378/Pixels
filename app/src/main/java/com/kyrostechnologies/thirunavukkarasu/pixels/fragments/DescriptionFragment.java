@@ -1,5 +1,6 @@
 package com.kyrostechnologies.thirunavukkarasu.pixels.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ChapterHolder;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ChaptersArrayClass;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaIdClass;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaPictureURL;
@@ -53,10 +54,23 @@ public class DescriptionFragment extends Fragment {
     private static final String TAG=DescriptionFragment.class.getSimpleName();
     private static final String  FILENAME="Manga.json";
     private Storage storage;
+    DataPassListener mCallBack;
+    public interface  DataPassListener{
+        public void passData(String data);
+    }
     public DescriptionFragment(){
 
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            mCallBack=(DataPassListener)context;
+        }catch (ClassCastException e){
+            throw new ClassCastException(context.toString()+" must implement DataPassListener");
+        }
+    }
 
     @Nullable
     @Override
@@ -84,6 +98,7 @@ public class DescriptionFragment extends Fragment {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.d("Manga_description_res",response.toString());
+                    ChaptersArrayList.clear();
                     try {
                         String alias=response.getString("alias");
                         String author=response.getString("author");
@@ -103,6 +118,7 @@ public class DescriptionFragment extends Fragment {
                             }
                         }
                         String title=response.getString("title");
+                        ChapterHolder.getHolder().setMangaTitle(title);
                         Title=title;
                         if(Title!=null){
                             manga_title_description.setText(Title);
@@ -124,7 +140,7 @@ public class DescriptionFragment extends Fragment {
                                     @Override
                                     public void onError() {
                                         progressBarHandler.hide();
-                                        Toast.makeText(getContext(),"Cannot Load Picture",Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(getContext(),"Cannot Load Picture",Toast.LENGTH_SHORT).show();
 
                                     }
                                 });
@@ -187,7 +203,11 @@ public class DescriptionFragment extends Fragment {
                         try{
                             Gson gson=new Gson();
                             String ChapterString=gson.toJson(ChaptersArrayList);
+
+                            ChapterHolder c=new ChapterHolder();
+                            c.ChapterHolder=ChapterString;
                             storage.putChapterList(ChapterString);
+                            mCallBack.passData(ChapterString);
                         }catch (Exception e){
                             Log.d("exception_conve_gson",e.getMessage());
                         }

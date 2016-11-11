@@ -53,6 +53,8 @@ public class MangaActivity extends AppCompatActivity {
     private List<MangaClass>mangaClassList=new ArrayList<MangaClass>();
     private MangaAdapter adapter;
     private String  MangaResponse=null;
+    private ProgressDialog pDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,8 +93,8 @@ public class MangaActivity extends AppCompatActivity {
             public void onRefresh() {
                 GetManga();
 
-            }
-        });
+    }
+});
     }
 
     private void GetManga() {
@@ -118,8 +120,11 @@ public class MangaActivity extends AppCompatActivity {
                         JSONObject first=manga.getJSONObject(i);
                         String MangaTitle=first.getString("t");
                         String Id=first.getString("i");
+                        String im=first.getString("im");
+
                         MangaClass mangaClass=new MangaClass();
                         mangaClass.setId(Id);
+                        mangaClass.setMangaPicture(im);
                         mangaClass.setMangaTitle(MangaTitle);
                         mangaClassList.add(mangaClass);
                     }
@@ -222,8 +227,28 @@ public class MangaActivity extends AppCompatActivity {
         catch (IOException e) {e.printStackTrace();}
 
     }
+    private void showProgressDialog() {
+        if (pDialog == null) {
+            pDialog = new ProgressDialog(MangaActivity.this);
+            pDialog.setMessage("Loading. Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+        }
+        pDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (pDialog != null && pDialog.isShowing()) {
+            pDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        dismissProgressDialog();
+        super.onDestroy();
+    }
     public class AsyncReader extends AsyncTask<String,String,String >{
-        private ProgressDialog progressDialog;
              @Override
         protected String doInBackground(String... params) {
                  ReadFile("Manga.json");
@@ -233,17 +258,18 @@ public class MangaActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(MangaActivity.this);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Reading File Please wait..");
-            progressDialog.show();
+            showProgressDialog();
+
 
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            progressDialog.dismiss();
+            if (MangaActivity.this.isDestroyed()) {
+                return;
+            }
+            dismissProgressDialog();
         }
     }
     public class AsyncWriter extends AsyncTask<String,String,String >{
@@ -258,18 +284,17 @@ public class MangaActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(MangaActivity.this);
-            pd.setCancelable(false);
-            pd.setMessage("Writing File Please wait..");
-            pd.show();
+          showProgressDialog();
         }
 
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            pd.dismiss();
-
+            if (MangaActivity.this.isDestroyed()) {
+                return;
+            }
+            dismissProgressDialog();
         }
     }
     private void ReadFile(String filename){

@@ -16,28 +16,31 @@ import com.kyrostechnologies.thirunavukkarasu.pixels.R;
 import com.kyrostechnologies.thirunavukkarasu.pixels.fragments.ChapterFragment;
 import com.kyrostechnologies.thirunavukkarasu.pixels.fragments.DescriptionFragment;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaIdClass;
+import com.kyrostechnologies.thirunavukkarasu.pixels.storage.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MangaDescriptionActivity extends AppCompatActivity {
+public class MangaDescriptionActivity extends AppCompatActivity implements DescriptionFragment.DataPassListener{
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int []tabIcons={R.drawable.info,R.drawable.chapters};
     private String MangaId=null;
+private Storage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         MangaId= MangaIdClass.getHolder().getId();
-
+        storage=Storage.getInstance(getApplicationContext());
         setContentView(R.layout.activity_manga_description);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        storage.putChapterList(null);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -46,7 +49,9 @@ public class MangaDescriptionActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
+
     }
+
 
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
@@ -61,6 +66,12 @@ public class MangaDescriptionActivity extends AppCompatActivity {
 
         viewPager.setAdapter(adapter);
     }
+
+    @Override
+    public void passData(String data) {
+
+    }
+
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
