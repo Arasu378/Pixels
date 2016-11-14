@@ -24,6 +24,8 @@ public class PlayAnimeActivity extends AppCompatActivity implements EasyVideoCal
     android.support.v7.app.ActionBar actionBar;
     private   String playurl=null;
     private EasyVideoPlayer player_anime;
+    private int current_position;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +97,14 @@ public class PlayAnimeActivity extends AppCompatActivity implements EasyVideoCal
         super.onPause();
         // Make sure the player stops playing if the user presses the home button.
         player_anime.pause();
-    }
+        current_position=player_anime.getCurrentPosition();
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        player_anime.seekTo(current_position);
+    }
     @Override
     public void onStarted(EasyVideoPlayer player) {
 

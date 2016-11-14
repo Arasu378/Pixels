@@ -24,6 +24,8 @@ public class PlayVideoActivity extends AppCompatActivity implements EasyVideoCal
     private ServerErrorDialog serverErrorDialog;
     private CheckOnline checkOnline;
     private ProgressBarHandler progressBarHandler;
+    private    EasyVideoPlayer videoView;
+    private int current_position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class PlayVideoActivity extends AppCompatActivity implements EasyVideoCal
         url= PlayVideoClass.getholder().getUrl();
         tags= PlayVideoClass.getholder().getTags();
         userImageURL= PlayVideoClass.getholder().getUserImageURL();
-        EasyVideoPlayer videoView =(EasyVideoPlayer)findViewById(R.id.videoView1);
+         videoView =(EasyVideoPlayer)findViewById(R.id.videoView1);
         videoView.setCallback(this);
 
      if(url!=null){
@@ -73,6 +75,20 @@ public class PlayVideoActivity extends AppCompatActivity implements EasyVideoCal
         }
         return orientation;
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Make sure the player stops playing if the user presses the home button.
+        videoView.pause();
+        current_position=videoView.getCurrentPosition();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoView.seekTo(current_position);
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
