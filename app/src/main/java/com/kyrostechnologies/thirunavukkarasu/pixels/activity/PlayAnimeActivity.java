@@ -7,56 +7,73 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
-import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.PlayVideoClass;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.AnimeEpisodeTitile;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.CheckOnline;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ProgressBarHandler;
 import com.kyrostechnologies.thirunavukkarasu.pixels.servicehandler.ServerErrorDialog;
 
-public class PlayVideoActivity extends AppCompatActivity implements EasyVideoCallback {
-    private String  picture_id=null;
-    private String url=null;
-    private String tags=null;
-    private String userImageURL=null;
+public class PlayAnimeActivity extends AppCompatActivity implements EasyVideoCallback{
     private ServerErrorDialog serverErrorDialog;
     private CheckOnline checkOnline;
     private ProgressBarHandler progressBarHandler;
+    android.support.v7.app.ActionBar actionBar;
+    private   String playurl=null;
+    private EasyVideoPlayer player_anime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-      //  setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        setContentView(R.layout.activity_play_anime);
+       // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setContentView(R.layout.activity_play_video);
         serverErrorDialog=new ServerErrorDialog(this);
         checkOnline=new CheckOnline(this);
         checkOnline.checkOnline();
         progressBarHandler=new ProgressBarHandler(this);
-        picture_id= PlayVideoClass.getholder().getPicture_id();
-        url= PlayVideoClass.getholder().getUrl();
-        tags= PlayVideoClass.getholder().getTags();
-        userImageURL= PlayVideoClass.getholder().getUserImageURL();
-        EasyVideoPlayer videoView =(EasyVideoPlayer)findViewById(R.id.videoView1);
-        videoView.setCallback(this);
+         playurl= AnimeEpisodeTitile.getHolder().getPlayurl();
+        String title=AnimeEpisodeTitile.getHolder().getTitle();
+        String episodeno=AnimeEpisodeTitile.getHolder().getEpisodeNo();
 
-     if(url!=null){
-         videoView.setSource(Uri.parse(url));
-         videoView.setAutoPlay(true);
-
-     }
-        int oreintation=getScreenOrientation();
-        if(oreintation==2){
-            videoView.pause();
-            videoView.setAutoFullscreen(true);
+        player_anime=(EasyVideoPlayer)findViewById(R.id.player_anime);
+        player_anime.setCallback(this);
+        if(title!=null){
+            String ss=title+" "+episodeno;
+            actionBar.setTitle(ss);
         }
 
 
+        if(playurl!=null){
+                      player_anime.setSource(Uri.parse(playurl));
+            player_anime.setAutoPlay(true);
+
+        }
+        int oreintation=getScreenOrientation();
+        if(oreintation==2){
+            player_anime.pause();
+            player_anime.setAutoFullscreen(true);
+        }
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case android.R.id.home:
+                PlayAnimeActivity.this.finish();
+                Intent i= new Intent(PlayAnimeActivity.this, AnimeListActivity.class);
+                startActivity(i);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
     private int getScreenOrientation()
     {
@@ -73,17 +90,11 @@ public class PlayVideoActivity extends AppCompatActivity implements EasyVideoCal
         }
         return orientation;
     }
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case android.R.id.home:
-                PlayVideoActivity.this.finish();
-                Intent i= new Intent(PlayVideoActivity.this, Video_Activity.class);
-                startActivity(i);
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Make sure the player stops playing if the user presses the home button.
+        player_anime.pause();
     }
 
     @Override
@@ -113,7 +124,7 @@ public class PlayVideoActivity extends AppCompatActivity implements EasyVideoCal
 
     @Override
     public void onError(EasyVideoPlayer player, Exception e) {
-
+        Toast.makeText(getApplicationContext(),"An Error Occured :"+e.toString(),Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -123,6 +134,7 @@ public class PlayVideoActivity extends AppCompatActivity implements EasyVideoCal
 
     @Override
     public void onRetry(EasyVideoPlayer player, Uri source) {
+        Toast.makeText(getApplicationContext(),"player retrying",Toast.LENGTH_LONG).show();
 
     }
 

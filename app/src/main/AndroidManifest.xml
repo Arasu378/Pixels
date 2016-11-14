@@ -52,10 +52,13 @@
             android:label="Manga Description"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.MangaReadingActivity" />
-        <activity android:name=".activity.MyAnimeListActivity"
+        <activity
+            android:name=".activity.MyAnimeListActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
-            ></activity>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+        <activity android:name=".activity.AnimeDescriptionActivity" />
+        <activity android:name=".activity.AnimeListActivity" />
+        <activity android:name=".activity.PlayAnimeActivity"></activity>
     </application>
 
 </manifest>

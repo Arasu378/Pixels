@@ -63,6 +63,15 @@ public class Storage {
         editor.putString("ChapterList",value);
         editor.commit();
     }
+    public String getAnimeListWAtch(){
+        return sp.getString("AnimeListWAtch",null);
+    }
+    public void putAnimeListWAtch(String value){
+        SharedPreferences.Editor editor;
+        editor=sp.edit();
+        editor.putString("AnimeListWAtch",value);
+        editor.commit();
+    }
     public void clear(){
         SharedPreferences.Editor editor;
         editor=sp.edit();

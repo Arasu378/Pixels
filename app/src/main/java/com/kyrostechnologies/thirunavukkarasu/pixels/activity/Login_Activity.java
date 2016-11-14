@@ -95,7 +95,10 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
             GoogleSignInAccount acct = result.getSignInAccount();
             String displayName=acct.getDisplayName();
             Uri profilePicture=acct.getPhotoUrl();
-            Log.d("UserProfilePicture",profilePicture.toString());
+            if(profilePicture!=null){
+                Log.d("UserProfilePicture",profilePicture.toString());
+
+            }
             String email=acct.getEmail();
             String uniqueId=acct.getId();
             if(displayName!=null){
@@ -109,7 +112,11 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
                 String pic=profilePicture.toString();
                 storage.putUserPicture(pic);
             }
-            String picture=profilePicture.toString();
+            String picture="pic";
+            if(profilePicture!=null){
+                picture=profilePicture.toString();
+
+            }
             User user=new User(email,displayName,uniqueId,picture);
              userid=mFirebaseDatabase.push().getKey();
             mFirebaseDatabase.child(userid).setValue(user);

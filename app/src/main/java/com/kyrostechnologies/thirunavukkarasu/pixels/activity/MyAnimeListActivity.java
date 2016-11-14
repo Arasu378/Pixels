@@ -89,7 +89,7 @@ public class MyAnimeListActivity extends AppCompatActivity {
     private void TestingApi(String query,int page) {
 
         String url= MangaPictureURL.VIDEOURL+"anime?page="+page;
-        String i=MangaPictureURL.VIDEOURL+"anime/search";
+        String i=MangaPictureURL.VIDEOURL+"anime/?search="+"Searchquery";
         progressBarHandler.show();
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)

@@ -1,6 +1,7 @@
 package com.kyrostechnologies.thirunavukkarasu.pixels.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
+import com.kyrostechnologies.thirunavukkarasu.pixels.activity.AnimeDescriptionActivity;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.AnimeClass;
+import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.AnimeDescriptionHolderClass;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -54,7 +57,7 @@ public class AnimeAdapters extends RecyclerView.Adapter<AnimeAdapters.MyViewHold
          String title=animeClass.getTitle();
          String uploaded=animeClass.getUploaded();
          String thumbnail=animeClass.getThumbnail();
-         String url=animeClass.getUrl();
+         final String url=animeClass.getUrl();
         if(title!=null){
             String text="Anime Title: "+title;
             holder.title_text_anime.setText(title);
@@ -69,6 +72,15 @@ public class AnimeAdapters extends RecyclerView.Adapter<AnimeAdapters.MyViewHold
                 e.printStackTrace();
             }
         }
+        holder.cardView_next_anime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(mContext, AnimeDescriptionActivity.class);
+                AnimeDescriptionHolderClass.getHolderClass().setUrl(url);
+                mContext.startActivity(i);
+
+            }
+        });
 
     }
 

@@ -14,6 +14,7 @@ import com.kyrostechnologies.thirunavukkarasu.pixels.R;
 import com.kyrostechnologies.thirunavukkarasu.pixels.activity.Picture_Fullscreen;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.FullScreenClass;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.Pictures;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -72,7 +73,17 @@ public class AdapterPicture extends RecyclerView.Adapter<AdapterPicture.MyViewHo
         final String picture=pic.getWebformatURL();
         try{
             if(picture!=null){
-                Picasso.with(mContext).load(picture).resize(600,400).centerCrop().into(holder.photo_list);
+                Picasso.with(mContext).load(picture).resize(600,400).centerCrop().into(holder.photo_list, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
             }
         }catch (Exception e){
 
