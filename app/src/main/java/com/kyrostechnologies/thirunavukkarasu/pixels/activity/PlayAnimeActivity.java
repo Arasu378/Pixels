@@ -25,8 +25,6 @@ public class PlayAnimeActivity extends AppCompatActivity implements EasyVideoCal
     private   String playurl=null;
     private EasyVideoPlayer player_anime;
     private int current_position;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
