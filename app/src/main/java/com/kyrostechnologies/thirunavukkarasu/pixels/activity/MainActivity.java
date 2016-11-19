@@ -32,7 +32,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kyrostechnologies.thirunavukkarasu.pixels.R;
+import com.kyrostechnologies.thirunavukkarasu.pixels.TestingActivity;
 import com.kyrostechnologies.thirunavukkarasu.pixels.adapters.AdapterPicture;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.KeyPixabay;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.Pictures;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity
     private int Searchedcurrentpage=1;
     private boolean loading =true;
     private SwipeRefreshLayout swipe_refresh;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         storage=Storage.getInstance(getApplicationContext());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+mFirebaseAnalytics=FirebaseAnalytics.getInstance(this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -159,6 +162,12 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "pixels id");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "pixel name");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
     }
 
     @Override
@@ -328,6 +337,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(l);
         }else if(id==R.id.nav_anime){
             Intent kki=new Intent(MainActivity.this,MyAnimeListActivity.class);
+            startActivity(kki);
+        }else if(id==R.id.nav_testing){
+            Intent kki=new Intent(MainActivity.this,TestingActivity.class);
             startActivity(kki);
         }
 

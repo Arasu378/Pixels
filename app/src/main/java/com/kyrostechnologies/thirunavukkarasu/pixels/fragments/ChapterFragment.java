@@ -25,7 +25,6 @@ import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ChaptersArrayCla
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.ChaptersClass;
 import com.kyrostechnologies.thirunavukkarasu.pixels.modelclass.MangaChapterID;
 import com.kyrostechnologies.thirunavukkarasu.pixels.storage.Storage;
-import com.squareup.otto.Bus;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,7 +44,6 @@ public class ChapterFragment extends Fragment implements DescriptionFragment.Dat
     private List<ChaptersArrayClass >ChaptersList=new ArrayList<ChaptersArrayClass>();
     private ChapterListAdapter adapter;
     private ProgressDialog pDialog;
-    public static Bus bus;
 
     public  ChapterFragment(){
 

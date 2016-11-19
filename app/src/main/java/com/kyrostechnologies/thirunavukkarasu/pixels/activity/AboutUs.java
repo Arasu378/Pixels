@@ -1,6 +1,5 @@
 package com.kyrostechnologies.thirunavukkarasu.pixels.activity;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,8 +24,7 @@ public class AboutUs extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 AboutUs.this.finish();
-                Intent i= new Intent(AboutUs.this, MainActivity.class);
-                startActivity(i);
+
                 return true;
         }
 

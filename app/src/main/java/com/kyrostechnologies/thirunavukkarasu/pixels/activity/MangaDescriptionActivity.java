@@ -1,6 +1,5 @@
 package com.kyrostechnologies.thirunavukkarasu.pixels.activity;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -105,8 +104,7 @@ private Storage storage;
         switch (item.getItemId()){
             case android.R.id.home:
                 MangaDescriptionActivity.this.finish();
-                Intent i= new Intent(MangaDescriptionActivity.this, MangaActivity.class);
-                startActivity(i);
+
                 return true;
         }
 

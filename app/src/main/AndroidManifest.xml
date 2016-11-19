@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kyrostechnologies.thirunavukkarasu.pixels">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
 
@@ -58,7 +60,8 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity android:name=".activity.AnimeDescriptionActivity" />
         <activity android:name=".activity.AnimeListActivity" />
-        <activity android:name=".activity.PlayAnimeActivity"></activity>
+        <activity android:name=".activity.PlayAnimeActivity" />
+        <activity android:name=".TestingActivity"></activity>
     </application>
 
 </manifest>

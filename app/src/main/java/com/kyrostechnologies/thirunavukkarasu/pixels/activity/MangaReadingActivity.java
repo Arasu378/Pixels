@@ -1,7 +1,6 @@
 package com.kyrostechnologies.thirunavukkarasu.pixels.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -159,8 +158,7 @@ public class MangaReadingActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 MangaReadingActivity.this.finish();
-                Intent i= new Intent(MangaReadingActivity.this, MangaDescriptionActivity.class);
-                startActivity(i);
+
                 return true;
         }
 

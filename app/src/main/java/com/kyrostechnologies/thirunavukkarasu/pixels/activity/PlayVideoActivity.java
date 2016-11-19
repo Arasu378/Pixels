@@ -1,12 +1,12 @@
 package com.kyrostechnologies.thirunavukkarasu.pixels.activity;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
@@ -81,11 +81,13 @@ public class PlayVideoActivity extends AppCompatActivity implements EasyVideoCal
         // Make sure the player stops playing if the user presses the home button.
         videoView.pause();
         current_position=videoView.getCurrentPosition();
+        Toast.makeText(getApplicationContext(),"Current position onPause: "+current_position,Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Toast.makeText(getApplicationContext(),"Current position onResume: "+current_position,Toast.LENGTH_LONG).show();
         videoView.seekTo(current_position);
     }
 
@@ -94,8 +96,7 @@ public class PlayVideoActivity extends AppCompatActivity implements EasyVideoCal
         switch (item.getItemId()){
             case android.R.id.home:
                 PlayVideoActivity.this.finish();
-                Intent i= new Intent(PlayVideoActivity.this, Video_Activity.class);
-                startActivity(i);
+
                 return true;
         }
 

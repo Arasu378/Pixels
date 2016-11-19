@@ -1,6 +1,5 @@
 package com.kyrostechnologies.thirunavukkarasu.pixels.activity;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -78,8 +77,7 @@ public class Picture_Fullscreen extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 Picture_Fullscreen.this.finish();
-                Intent i= new Intent(Picture_Fullscreen.this, MainActivity.class);
-                startActivity(i);
+
                 return true;
         }
 

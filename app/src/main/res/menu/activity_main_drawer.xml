@@ -22,6 +22,11 @@
             android:id="@+id/nav_anime"
             android:icon="@drawable/anime_icon"
             android:title="Anime" />
+           <item
+            android:id="@+id/nav_testing"
+            android:icon="@drawable/anime_icon"
+            android:title="Testing" />
+
 
     </group>
 

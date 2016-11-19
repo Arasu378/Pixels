@@ -3,7 +3,6 @@ package com.kyrostechnologies.thirunavukkarasu.pixels.activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -161,8 +160,7 @@ public class MangaActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 MangaActivity.this.finish();
-                Intent i= new Intent(MangaActivity.this, MainActivity.class);
-                startActivity(i);
+
                 return true;
         }
 
