@@ -10,6 +10,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -43,6 +45,7 @@ public class MyAnimeListActivity extends AppCompatActivity {
     private String searchedquery=null;
     private AnimeAdapters adapter;
     private List<AnimeClass>animeClassList=new ArrayList<AnimeClass>();
+    private ImageView back_arrow;
     private ViewFlipper ss;
 
 
@@ -65,6 +68,13 @@ public class MyAnimeListActivity extends AppCompatActivity {
         anime_recyclerview.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         swipe_anime_list=(SwipeRefreshLayout)findViewById(R.id.swipe_anime_list);
+        back_arrow=(ImageView)findViewById(R.id.back_arrow);
+        back_arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyAnimeListActivity.this.finish();
+            }
+        });
         swipe_anime_list.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

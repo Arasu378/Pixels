@@ -71,6 +71,11 @@ public class MainActivity extends AppCompatActivity
     private boolean loading =true;
     private SwipeRefreshLayout swipe_refresh;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private long mBackPressed;
+    private  final int TIME_INTERVAL = 2000;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,8 +276,15 @@ mFirebaseAnalytics=FirebaseAnalytics.getInstance(this);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
-        }
+            if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+                super.onBackPressed();
+                return;
+            } else {
+                Toast.makeText(getBaseContext(), "Tap back button in order to exit", Toast.LENGTH_SHORT).show();
+            }
+
+
+            mBackPressed = System.currentTimeMillis();        }
     }
 
     @Override
