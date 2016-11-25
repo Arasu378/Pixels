@@ -18,13 +18,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +77,9 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAnalytics mFirebaseAnalytics;
     private long mBackPressed;
     private  final int TIME_INTERVAL = 2000;
-
+    private  String CategoryString=null;
+    private Spinner spinner_category_testing;
+    private Spinner spinner_order_testing;
 
 
 
@@ -120,11 +126,75 @@ mFirebaseAnalytics=FirebaseAnalytics.getInstance(this);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         recyler_picture=(RecyclerView)findViewById(R.id.recyler_picture);
-        GetPictures(null,Searchedcurrentpage);
+        spinner_category_testing=(Spinner)findViewById(R.id.spinner_category_testing);
+        spinner_order_testing=(Spinner)findViewById(R.id.spinner_order_testing);
+        List<String>spinner_order_string=new ArrayList<String>();
+        List<String >catogory_item=new ArrayList<String>();
+        spinner_order_string.add("popular");
+        spinner_order_string.add("latest");
+        catogory_item.add("all");
+        catogory_item.add("fashion");
+        catogory_item.add("nature");
+        catogory_item.add("backgrounds");
+        catogory_item.add("science");
+        catogory_item.add("education");
+        catogory_item.add("people");
+        catogory_item.add("feelings");
+        catogory_item.add("religion");
+        catogory_item.add("health");
+        catogory_item.add("places");
+        catogory_item.add("animals");
+        catogory_item.add("industry");
+        catogory_item.add("food");
+        catogory_item.add("computer");
+        catogory_item.add("sports");
+        catogory_item.add("transportation");
+        catogory_item.add("buildings");
+        catogory_item.add("business");
+        catogory_item.add("music");
+
+        ArrayAdapter<String>orderadapter=new ArrayAdapter<String>(this, R.layout.spinner_item_text, spinner_order_string);
+        ArrayAdapter<String>categoryorder=new ArrayAdapter<String>(this,R.layout.spinner_item_text,catogory_item);
+        orderadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categoryorder.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_category_testing.setPrompt("Category");
+        spinner_order_testing.setPrompt("Order");
+        spinner_category_testing.setAdapter(categoryorder);
+        spinner_order_testing.setAdapter(orderadapter);
+        spinner_order_testing.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item=parent.getItemAtPosition(position).toString();
+                picturesList.clear();
+                if(CategoryString!=null){
+                    GetPictures(null,Searchedcurrentpage,CategoryString,item);
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        }); spinner_category_testing.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item=parent.getItemAtPosition(position).toString();
+                picturesList.clear();
+                GetPictures(null,Searchedcurrentpage,item,"popular");
+                CategoryString=item;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        GetPictures(null,Searchedcurrentpage,null,"popular");
         swipe_refresh=(SwipeRefreshLayout)findViewById(R.id.swipe_refresh) ;
         adapter=new AdapterPicture(MainActivity.this,picturesList);
         final LinearLayoutManager layoutManager=new LinearLayoutManager(getApplicationContext());
-        recyler_picture.setLayoutManager(layoutManager);
+        recyler_picture.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         recyler_picture.setItemAnimator(new DefaultItemAnimator());
         recyler_picture.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -152,9 +222,9 @@ mFirebaseAnalytics=FirebaseAnalytics.getInstance(this);
             @Override
             public void onLoadMore(int current_page) {
                 if(searchedquery==null){
-                    GetPictures(null,current_page);
+                    GetPictures(null,current_page,null,"popular");
                 }else{
-                    GetPictures(searchedquery,current_page);
+                    GetPictures(searchedquery,current_page,null,"popular");
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -163,7 +233,7 @@ mFirebaseAnalytics=FirebaseAnalytics.getInstance(this);
 
             @Override
             public void onRefresh() {
-                GetPictures(null,Searchedcurrentpage);
+                GetPictures(null,Searchedcurrentpage,null,"popular");
 
             }
         });
@@ -199,13 +269,16 @@ mFirebaseAnalytics=FirebaseAnalytics.getInstance(this);
             }}
     }
 
-    private void GetPictures(String query, int currentpage) {
+    private void GetPictures(String query, int currentpage,String Categorystr,String order ) {
         final String key = KeyPixabay.getKey();
 
         String i = "https://pixabay.com/api/?key=" + key+"&q="+query+"&image_type=photo&pretty=true&page="+currentpage;
         String url="https://pixabay.com/api/?key=" + key+"&image_type=photo&pretty=true&page="+currentpage;
-        if(query==null){
+        String categoryurl="https://pixabay.com/api/?key=" + key+"&order="+order+"&category="+Categorystr+"&image_type=photo&pretty=true&page="+currentpage;
+        if(query==null&&Categorystr==null){
             i=url;
+        }else if(Categorystr!=null){
+            i=categoryurl;
         }
         progressBarHandler.show();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, i, (String) null, new Response.Listener<JSONObject>() {
@@ -214,25 +287,32 @@ mFirebaseAnalytics=FirebaseAnalytics.getInstance(this);
                 Log.d("pixabay",response.toString());
                 try{
                     JSONArray hits=response.getJSONArray("hits");
-                    for(int k=0; k<hits.length();k++){
-                        JSONObject first=hits.getJSONObject(k);
-                        String tag=first.getString("tags");
-                        String webformatURL=first.getString("webformatURL");
-                        String id=first.getString("id");
-                        String likes=first.getString("likes");
-                        String comments=first.getString("comments");
-                        String user=first.getString("user");
-                        String favorites=first.getString("favorites");
-                        Pictures pic=new Pictures();
-                        pic.setId(id);
-                        pic.setTags(tag);
-                        pic.setWebformatURL(webformatURL);
-                        pic.setLikes(likes);
-                        pic.setComments(comments);
-                        pic.setUser(user);
-                        pic.setFavorites(favorites);
-                        picturesList.add(pic);
+                    String total=response.getString("total");
+                    String totalHits=response.getString("totalHits");
+                    if(!totalHits.equals("0")){
+                        for(int k=0; k<hits.length();k++){
+                            JSONObject first=hits.getJSONObject(k);
+                            String tag=first.getString("tags");
+                            String webformatURL=first.getString("webformatURL");
+                            String id=first.getString("id");
+                            String likes=first.getString("likes");
+                            String comments=first.getString("comments");
+                            String user=first.getString("user");
+                            String favorites=first.getString("favorites");
+                            Pictures pic=new Pictures();
+                            pic.setId(id);
+                            pic.setTags(tag);
+                            pic.setWebformatURL(webformatURL);
+                            pic.setLikes(likes);
+                            pic.setComments(comments);
+                            pic.setUser(user);
+                            pic.setFavorites(favorites);
+                            picturesList.add(pic);
+                        }
+                    }else{
+                        Toast.makeText(getApplicationContext(),"Sorry Pictures not available",Toast.LENGTH_LONG).show();
                     }
+
                     adapter.notifyDataSetChanged();
                 }catch (Exception e){
                     e.printStackTrace();
@@ -292,6 +372,9 @@ mFirebaseAnalytics=FirebaseAnalytics.getInstance(this);
         getMenuInflater().inflate(R.menu.action_search, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+      // dataAdapter12.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -299,7 +382,7 @@ mFirebaseAnalytics=FirebaseAnalytics.getInstance(this);
                 String i=query.replace(" ","+");
                 picturesList.clear();
                 searchedquery=i;
-                    GetPictures(i,Searchedcurrentpage);
+                    GetPictures(i,Searchedcurrentpage,null,"popular");
 
                 return false;
             }

@@ -13,7 +13,7 @@
         app:cardBackgroundColor="@color/cardview_background"
         android:id="@+id/imgur_card_view_item"
         android:layout_margin="5dp">
-        <ImageView
+        <com.felipecsl.gifimageview.library.GifImageView
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:adjustViewBounds="true"

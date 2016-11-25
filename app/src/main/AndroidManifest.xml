@@ -12,6 +12,7 @@
         android:name=".servicehandler.ServiceHandler"
         android:allowBackup="true"
         android:icon="@mipmap/pixel_launcher"
+
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -61,7 +62,8 @@
         <activity android:name=".activity.AnimeDescriptionActivity" />
         <activity android:name=".activity.AnimeListActivity" />
         <activity android:name=".activity.PlayAnimeActivity" />
-        <activity android:name=".TestingActivity"></activity>
+        <activity android:name=".TestingActivity"
+            ></activity>
     </application>
 
 </manifest>
